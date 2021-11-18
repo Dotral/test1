@@ -2,6 +2,7 @@ from urllib import parse
 import requests
 import json
 import execjs
+import pyperclip
 
 headers = {
     'Host': 'fanyi.baidu.com',
@@ -66,9 +67,12 @@ langlistzh = {'zh': '中文', 'jp': '日语', 'jpka': '日语假名', 'th': '泰
 langlisten = {1: 'zh', 2: 'jp', 3: 'jpka', 4: 'th', 5: 'fra', 6: 'en', 7: 'spa', 8: 'kor', 9: 'tr', 10: 'vie', 11: 'ms', 12: 'de', 13: 'ru', 14: 'ir', 15: 'ara', 16: 'est', 17: 'be', 18: 'bul', 19: 'hi', 20: 'is', 21: 'pl', 22: 'fa', 23: 'dan', 24: 'tl', 25: 'fin', 26: 'nl', 27: 'ca', 28: 'cs', 29: 'hr', 30: 'lv', 31: 'lt', 32: 'rom', 33: 'af', 34: 'no', 35: 'pt_BR', 36: 'pt', 37: 'swe', 38: 'sr', 39: 'eo', 40: 'sk', 41: 'slo', 42: 'sw', 43: 'uk', 44: 'iw', 45: 'el', 46: 'hu', 47: 'hy', 48: 'it', 49: 'id', 50: 'sq', 51: 'am', 52: 'as', 53: 'az', 54: 'eu', 55: 'bn', 56: 'bs', 57: 'gl', 58: 'ka', 59: 'gu', 60: 'ha', 61: 'ig', 62: 'iu', 63: 'ga', 64: 'zu', 65: 'kn', 66: 'kk', 67: 'ky', 68: 'lb', 69: 'mk', 70: 'mt', 71: 'mi', 72: 'mr', 73: 'ne', 74: 'or', 75: 'pa', 76: 'qu', 77: 'tn', 78: 'si', 79: 'ta', 80: 'tt', 81: 'te', 82: 'ur', 83: 'uz', 84: 'cy', 85: 'yo', 86: 'yue', 87: 'wyw', 88: 'cht'}
 s = Spider()
 f = 1
+isCopy = False
 to = 'en'
 
-print("需要指定语种输入1，不输入退出\n默认输入语种自动检测")
+print("需要指定语种输入1，不输入退出")
+print("翻译结果直接复制输入2（不需要复制即可粘贴），再次输入可恢复")
+print("默认输入语种自动检测")
 while f:
     i = 0
     fy = 1
@@ -82,7 +86,6 @@ while f:
             print(fmt % (i, langlistzh[lan]), end='')
             if i % 10 == 0:
                 print()
-
         while fy:
             to = int(input("\n输入语种序号（from to）："))
             if to > 89:
@@ -91,11 +94,16 @@ while f:
                 to = langlisten[to]
                 break
         query = input('输入您需要翻译的内容：')
+    elif query == '2':
+        isCopy = not isCopy
+        print('将' + ('会' if isCopy else '不会') + '复制到剪贴板')
 
     if not query:
         f = 0
-    else:
+    elif query != '1' and query != '2':
         x = s.tslt(query, to=to)
         # y = s.tslt(x, to='zh')
+        if isCopy:
+            pyperclip.copy(x)
         print(x)
         # print(x+ '   ----->   ' + y)
